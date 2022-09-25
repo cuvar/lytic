@@ -1,5 +1,3 @@
-import { isAnalyticEntry } from "@/utils/data";
-import { trpc } from "@/utils/trpc";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@server/db/client";
 
@@ -8,6 +6,10 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const { id } = req.query;
+  if (typeof id !== "string") {
+    res.status(400).json("Invalid request");
+    return;
+  }
 
   if (req.method == "GET") {
     const result = await prisma.lytic.findUnique({
@@ -22,29 +24,25 @@ export default async function handler(
     });
     res.status(200).json(result);
   } else if (req.method == "POST") {
-    const { name, website, clicks } = req.body;
-    const newAnalytics = { name, website, clicks };
+    const { clicks } = req.body;
 
-    if (!isAnalyticEntry(newAnalytics)) {
-      res.status(400).json("Invalid data");
-      return;
-    }
+    try {
+      const successful = await prisma.lytic.update({
+        where: {
+          name: id,
+        },
+        data: {
+          clicks: clicks,
+        },
+      });
+      console.log(successful);
 
-    if (name !== id) return new Response("Invalid request", { status: 400 });
-    const successful = await prisma.lytic.update({
-      where: {
-        name: newAnalytics.name,
-      },
-      data: {
-        clicks: newAnalytics.clicks,
-      },
-    });
-    if (successful) {
-      res.status(200).json("Analytics updated");
-      return;
-    } else {
-      res.status(404).json("Analytics not found");
-      return;
+      successful
+        ? res.status(200).json("Analytics updated")
+        : res.status(404).json("Analytics not found");
+    } catch (error) {
+      console.log(error);
+      res.status(500).json("An error occurred");
     }
   } else {
     res.status(405).json("Method not allowed");

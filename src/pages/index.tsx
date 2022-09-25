@@ -14,8 +14,8 @@ const Home: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Twitter clone</title>
-        <meta name="description" content="Twitter clone by cuvar" />
+        <title>Lytic</title>
+        <meta name="description" content="Lytic by cuvar" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="bg-teal-200 flex justify-center items-center text-xl w-screen h-screen">
