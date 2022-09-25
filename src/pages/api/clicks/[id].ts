@@ -24,22 +24,37 @@ export default async function handler(
     });
     res.status(200).json(result);
   } else if (req.method == "POST") {
-    const { clicks } = req.body;
+    let result = null;
+    try {
+      result = await prisma.lytic.findUnique({
+        where: {
+          name: id,
+        },
+        select: {
+          clicks: true,
+        },
+      });
+    } catch (error) {
+      res.status(500).json("An error occurred while fetching");
+    }
+
+    if (result == null) {
+      res.status(500).json("No data to update");
+      return;
+    }
+
+    const clicksInc = result.clicks + 1;
 
     try {
-      const successful = await prisma.lytic.update({
+      await prisma.lytic.update({
         where: {
           name: id,
         },
         data: {
-          clicks: clicks,
+          clicks: clicksInc,
         },
       });
-      console.log(successful);
-
-      successful
-        ? res.status(200).json("Analytics updated")
-        : res.status(404).json("Analytics not found");
+      res.status(200).json("Analytics updated");
     } catch (error) {
       console.log(error);
       res.status(500).json("An error occurred");
