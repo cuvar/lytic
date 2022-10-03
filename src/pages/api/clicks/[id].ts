@@ -10,6 +10,8 @@ export default async function handler(
     res.status(400).json("Invalid request");
     return;
   }
+  res.setHeader("Access-Control-Allow-Origin", "blog.cuvar.dev");
+  res.setHeader("Vary", "Origin");
 
   if (req.method == "GET") {
     const result = await prisma.lytic.findUnique({
@@ -22,6 +24,7 @@ export default async function handler(
         clicks: true,
       },
     });
+
     res.status(200).json(result);
   } else if (req.method == "POST") {
     let result = null;
