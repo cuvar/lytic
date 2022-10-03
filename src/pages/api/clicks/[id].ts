@@ -10,7 +10,7 @@ export default async function handler(
     res.status(400).json("Invalid request");
     return;
   }
-  res.setHeader("Access-Control-Allow-Origin", "blog.cuvar.dev");
+  res.setHeader("Access-Control-Allow-Origin", "https://blog.cuvar.dev");
   res.setHeader("Vary", "Origin");
 
   if (req.method == "GET") {
