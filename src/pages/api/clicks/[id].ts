@@ -11,6 +11,7 @@ export default async function handler(
     return;
   }
   res.setHeader("Access-Control-Allow-Origin", "https://blog.cuvar.dev");
+  res.setHeader("Access-Control-Request-Method", "POST");
   res.setHeader("Vary", "Origin");
 
   if (req.method == "GET") {
@@ -26,6 +27,10 @@ export default async function handler(
     });
 
     res.status(200).json(result);
+  } else if (req.method == "OPTIONS") {
+    res.status(204);
+    res.setHeader("Allow", "GET, OPTIONS, POST");
+    res.end();
   } else if (req.method == "POST") {
     let result = null;
     try {
