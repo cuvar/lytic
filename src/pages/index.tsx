@@ -19,7 +19,7 @@ const Home: NextPage = () => {
         <div className="flex justify-center items-center text-xl w-screen h-screen">
           <div className="p-4 mx-auto max-w-screen-md flex flex-col justify-center items-center space-y-4">
             <h1 className="font-bold text-teal-700 text-3xl">
-              You're not authenticated
+              You&apos;re not authenticated
             </h1>
             <button
               onClick={() => signIn()}
